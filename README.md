@@ -16,17 +16,17 @@ A automação recebe mensagens, processa os dados, armazena em banco de dados e 
 
 - n8n (automação de workflows)
 - API de WhatsApp
-- Banco de dados ( PostgreSQL / Supabase)
-- Dashboard feito com IA integrado ao Supabase
+- Banco de dados (PostgreSQL / Supabase)
+- Dashboard integrado ao Supabase
 
 ## 🔄 Como funciona
 
 1. O usuário envia uma mensagem via WhatsApp  
 2. A automação no n8n recebe via webhook  
 3. Os dados são processados e tratados  
-4. As informações são salvas no banco de dados (Supabase) 
-5. O dashboard consome esses dados via Supabase para visualização 
-6. o usúario pode consultar seus dados tanto de automação pelo WhatsApp(agente de ia humanizado), como via DashBoard.
+4. As informações são salvas no banco de dados (Supabase)  
+5. O dashboard consome esses dados para visualização  
+6. O usuário pode consultar seus dados via WhatsApp (agente de IA) ou pelo dashboard  
 
 ## 📌 Funcionalidades
 
@@ -46,5 +46,3 @@ A automação recebe mensagens, processa os dados, armazena em banco de dados e 
 - Gráficos e análises de receitas e despesas  
 - Acompanhamento de metas financeiras  
 - Interface para consulta e organização dos dados  
-
-- Visualização em dashboard por meio de diversos tipos de análises
