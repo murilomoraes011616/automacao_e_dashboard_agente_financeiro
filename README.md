@@ -12,7 +12,7 @@ Este projeto consiste em um agente automatizado capaz de interagir com usuários
 
 A automação recebe mensagens, processa os dados, armazena em banco de dados e disponibiliza as informações em um dashboard para análise.
 
-## ⚙️ Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas 
 
 - n8n (automação de workflows)
 - API de WhatsApp
