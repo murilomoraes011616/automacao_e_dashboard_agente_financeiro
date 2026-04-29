@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Light theme - Verde Pistache predominante */
+    --background: 85 45% 88%;
+    --foreground: 150 15% 15%;
+
+    --card: 85 55% 96%;
+    --card-foreground: 150 15% 15%;
+
+    --popover: 85 55% 96%;
+    --popover-foreground: 150 15% 15%;
+
+    /* Verde Pistache como cor principal */
+    --primary: 85 50% 65%;
+    --primary-foreground: 150 20% 10%;
+    --primary-light: 85 55% 75%;
+    --primary-dark: 85 45% 55%;
+
+    --secondary: 85 40% 85%;
+    --secondary-foreground: 150 15% 15%;
+
+    --muted: 85 35% 90%;
+    --muted-foreground: 150 10% 45%;
+
+    --accent: 85 60% 70%;
+    --accent-foreground: 150 20% 10%;
+
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 140 60% 55%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 85 30% 82%;
+    --input: 85 45% 94%;
+    --ring: 85 50% 65%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 85 50% 94%;
+    --sidebar-foreground: 150 15% 20%;
+    --sidebar-primary: 85 50% 65%;
+    --sidebar-primary-foreground: 150 20% 10%;
+    --sidebar-accent: 85 45% 88%;
+    --sidebar-accent-foreground: 150 15% 20%;
+    --sidebar-border: 85 30% 82%;
+    --sidebar-ring: 85 50% 65%;
+  }
+
+  .dark {
+    /* Dark theme - Azul Marinho predominante */
+    --background: 220 40% 8%;
+    --foreground: 220 15% 92%;
+
+    --card: 220 38% 12%;
+    --card-foreground: 220 15% 92%;
+
+    --popover: 220 38% 12%;
+    --popover-foreground: 220 15% 92%;
+
+    /* Azul Marinho como cor principal */
+    --primary: 215 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 215 80% 65%;
+    --primary-dark: 215 90% 45%;
+
+    --secondary: 220 35% 18%;
+    --secondary-foreground: 220 15% 92%;
+
+    --muted: 220 30% 15%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 200 80% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 140 60% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 220 30% 20%;
+    --input: 220 30% 18%;
+    --ring: 215 85% 55%;
+
+    --sidebar-background: 220 38% 10%;
+    --sidebar-foreground: 220 15% 85%;
+    --sidebar-primary: 215 85% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 35% 15%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 220 30% 18%;
+    --sidebar-ring: 215 85% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

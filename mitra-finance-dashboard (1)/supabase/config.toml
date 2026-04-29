@@ -1,0 +1,4 @@
+project_id = "leialgtsvtymuftepcrn"
+
+[functions.whatsapp-sync]
+verify_jwt = false
