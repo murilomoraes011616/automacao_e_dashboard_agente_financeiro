@@ -212,3 +212,10 @@ Isso possibilita planejamento financeiro e acompanhamento de progresso.
 - Visualização dinâmica (gráficos e tabelas)  
 - Análise temporal de dados financeiros  
 - Planejamento financeiro com metas  
+
+
+## visão geral:
+
+![alt text](image-10.png)
+![alt text](image-9.png)
+![alt text](image-10.png)
