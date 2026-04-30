@@ -216,6 +216,7 @@ Isso possibilita planejamento financeiro e acompanhamento de progresso.
 
 ## visão geral:
 
-![alt text](image-10.png)
+![alt text](image.png)
 ![alt text](image-9.png)
 ![alt text](image-10.png)
+![alt text](image-11.png)
