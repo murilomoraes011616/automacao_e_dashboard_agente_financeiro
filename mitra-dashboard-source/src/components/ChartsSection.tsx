@@ -36,6 +36,7 @@ const COLORS = {
   saida: "hsl(var(--destructive))",
 };
 
+// Paleta de cores usada no gráfico de pizza/colunas por categoria.
 const PIE_COLORS = [
   "hsl(280 65% 60%)",  // Roxo
   "hsl(200 80% 55%)",  // Azul ciano
@@ -49,11 +50,19 @@ const PIE_COLORS = [
   "hsl(120 60% 50%)",  // Verde limão
 ];
 
+/**
+ * ChartsSection — Seção com os três gráficos do dashboard:
+ *  1) Barras: comparação Entrada x Saída por mês.
+ *  2) Pizza/Colunas: distribuição por categoria (alterna entre entradas e saídas).
+ *  3) Linha: evolução do saldo acumulado ao longo do tempo.
+ */
 export function ChartsSection({ transactions }: ChartsSectionProps) {
+  // Estado: alterna entre exibir despesas ou entradas no gráfico de categorias.
   const [pieChartMode, setPieChartMode] = useState<"saida" | "entrada">("saida");
+  // Estado: alterna a visualização entre Pizza (false) e Colunas (true).
   const [showColumnChart, setShowColumnChart] = useState(false);
 
-  // Dados para o gráfico de barras (Entrada x Saída)
+  // Agrega os valores por mês para o gráfico de barras Entrada x Saída.
   const barChartData = transactions.reduce((acc, t) => {
     const month = new Date(t.date).toLocaleDateString("pt-BR", { month: "short" });
     const existing = acc.find((item) => item.month === month);

@@ -1,98 +1,38 @@
-import { useEffect, useState } from "react";
+/**
+ * GoalProgress — versão demo. Lista metas do localStore.
+ */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { Target, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
-
-interface Goal {
-  id: string;
-  goal_name: string;
-  target_amount: number;
-  deadline: string;
-}
+import { useGoals } from "@/lib/localStore";
 
 interface GoalProgressProps {
   currentBalance: number;
 }
 
 export function GoalProgress({ currentBalance }: GoalProgressProps) {
-  const { user } = useAuth();
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { goals, remove } = useGoals();
 
-  const fetchGoals = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from("metas")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("deadline", { ascending: true });
-
-      if (error) throw error;
-      setGoals((data || []) as Goal[]);
-    } catch (error) {
-      console.error("Error fetching goals:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchGoals();
-
-    const channel = supabase
-      .channel("metas-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "metas",
-        },
-        () => {
-          fetchGoals();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
       minimumFractionDigits: 0,
     }).format(value);
+
+  const handleDelete = (id: string) => {
+    remove(id);
+    toast.success("Meta removida com sucesso!");
   };
 
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
-    try {
-      const { error } = await supabase
-        .from("metas")
-        .delete()
-        .eq("id", id);
+  if (goals.length === 0) return null;
 
-      if (error) throw error;
-      toast.success("Meta removida com sucesso!");
-    } catch (error) {
-      console.error("Error deleting goal:", error);
-      toast.error("Erro ao remover meta");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  if (goals.length === 0) {
-    return null;
-  }
+  const sorted = [...goals].sort(
+    (a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+  );
 
   return (
     <Card>
@@ -103,9 +43,9 @@ export function GoalProgress({ currentBalance }: GoalProgressProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {goals.map((goal) => {
+        {sorted.map((goal, idx) => {
           const progress = Math.min((currentBalance / goal.target_amount) * 100, 100);
-          
+
           return (
             <div key={goal.id} className="space-y-2">
               <div className="flex justify-between items-start gap-2">
@@ -123,14 +63,12 @@ export function GoalProgress({ currentBalance }: GoalProgressProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => handleDelete(goal.id)}
-                  disabled={deletingId === goal.id}
                   className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
 
-              {/* Barra de Progresso Compacta */}
               <div className="relative">
                 <div className="h-6 bg-muted rounded-full overflow-hidden">
                   <div
@@ -138,8 +76,6 @@ export function GoalProgress({ currentBalance }: GoalProgressProps) {
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                
-                {/* Indicador do Saldo Atual */}
                 <div
                   className="absolute -top-1 flex flex-col items-center transition-all duration-500"
                   style={{ left: `${Math.min(progress, 95)}%` }}
@@ -151,7 +87,6 @@ export function GoalProgress({ currentBalance }: GoalProgressProps) {
                 </div>
               </div>
 
-              {/* Legenda Compacta */}
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>R$ 0</span>
                 <span className="font-medium text-primary">
@@ -159,8 +94,8 @@ export function GoalProgress({ currentBalance }: GoalProgressProps) {
                 </span>
                 <span>{formatCurrency(goal.target_amount)}</span>
               </div>
-              
-              {goals.length > 1 && goal.id !== goals[goals.length - 1].id && (
+
+              {sorted.length > 1 && idx !== sorted.length - 1 && (
                 <div className="border-b border-border mt-2" />
               )}
             </div>

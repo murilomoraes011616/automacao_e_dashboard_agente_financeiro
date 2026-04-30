@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+/**
+ * TransactionForm — versão demo (sem Supabase). Salva no localStore.
+ */
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -29,16 +32,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
-
-interface Category {
-  id: string;
-  name: string;
-  type: "entrada" | "saida";
-}
+import { useCategories, useTransactions } from "@/lib/localStore";
 
 const formSchema = z.object({
   type: z.enum(["entrada", "saida"]),
@@ -50,13 +52,11 @@ const formSchema = z.object({
   description: z.string().optional(),
 });
 
-
-export function TransactionForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { user } = useAuth();
+export function TransactionForm() {
+  const { categories, add: addCategory } = useCategories();
+  const { add: addTransaction } = useTransactions();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,130 +71,43 @@ export function TransactionForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const selectedType = form.watch("type");
+  const filteredCategories = categories.filter((c) => c.type === selectedType);
 
-  const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("*")
-        .order("name");
-
-      if (error) throw error;
-      setCategories((data || []) as Category[]);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-
-    const channel = supabase
-      .channel("categories-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "categories",
-        },
-        () => {
-          fetchCategories();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) {
+  const handleAddCategory = () => {
+    const name = newCategoryName.trim();
+    if (!name) {
       toast.error("Digite o nome da categoria");
       return;
     }
-
-    if (!user) {
-      toast.error("Você precisa estar logado");
+    const { error } = addCategory({ name, type: selectedType });
+    if (error) {
+      toast.error(error);
       return;
     }
-
-    setIsAddingCategory(true);
-    try {
-      // Buscar whatsapp_number do perfil
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('whatsapp_number')
-        .eq('id', user.id)
-        .single();
-
-      const userLid = profile?.whatsapp_number ? `${profile.whatsapp_number}@s.whatsapp.net` : null;
-
-      const { error } = await supabase.from("categories").insert({
-        name: newCategoryName.trim(),
-        type: selectedType,
-        user_id: user.id,
-        whatsapp_number: profile?.whatsapp_number || null,
-        user_lid: userLid,
-      });
-
-      if (error) {
-        if (error.code === "23505") {
-          toast.error("Esta categoria já existe");
-        } else {
-          throw error;
-        }
-        return;
-      }
-
-      toast.success("Categoria adicionada com sucesso!");
-      setNewCategoryName("");
-      setShowCategoryDialog(false);
-      form.setValue("category", newCategoryName.trim());
-    } catch (error) {
-      console.error("Error adding category:", error);
-      toast.error("Erro ao adicionar categoria");
-    } finally {
-      setIsAddingCategory(false);
-    }
+    toast.success("Categoria adicionada com sucesso!");
+    form.setValue("category", name);
+    setNewCategoryName("");
+    setShowCategoryDialog(false);
   };
 
-  const filteredCategories = categories.filter((cat) => cat.type === selectedType);
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user) return;
-    
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      // Buscar whatsapp_number do perfil
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('whatsapp_number')
-        .eq('id', user.id)
-        .single();
-
-      const userLid = profile?.whatsapp_number ? `${profile.whatsapp_number}@s.whatsapp.net` : null;
-
-      const tableName = values.type === "entrada" ? "entradas" : "saidas";
-      const { error } = await supabase.from(tableName).insert({
+      addTransaction({
+        type: values.type,
         date: values.date.toISOString(),
         category: values.category,
         amount: Number(values.amount),
-        description: values.description || null,
-        user_id: user.id,
-        whatsapp_number: profile?.whatsapp_number || null,
-        user_lid: userLid,
+        description: values.description || undefined,
       });
-
-      if (error) throw error;
-
       toast.success("Transação adicionada com sucesso!");
-      form.reset();
-      onSuccess?.();
-    } catch (error) {
-      console.error("Error inserting transaction:", error);
-      toast.error("Erro ao adicionar transação");
+      form.reset({
+        type: values.type,
+        date: new Date(),
+        category: "",
+        amount: "",
+        description: "",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -314,12 +227,8 @@ export function TransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                             }}
                           />
                         </div>
-                        <Button
-                          onClick={handleAddCategory}
-                          disabled={isAddingCategory}
-                          className="w-full"
-                        >
-                          {isAddingCategory ? "Adicionando..." : "Adicionar Categoria"}
+                        <Button onClick={handleAddCategory} className="w-full">
+                          Adicionar Categoria
                         </Button>
                       </div>
                     </DialogContent>
@@ -341,24 +250,12 @@ export function TransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                     placeholder="0,00"
                     value={field.value}
                     onChange={(e) => {
-                      // Remove tudo exceto dígitos
                       const value = e.target.value.replace(/\D/g, "");
-                      
                       if (value === "") {
                         field.onChange("");
                         return;
                       }
-                      
-                      // Converte para número com centavos
                       const numberValue = Number(value) / 100;
-                      
-                      // Formata com . para milhares e , para centavos
-                      const formatted = new Intl.NumberFormat("pt-BR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      }).format(numberValue);
-                      
-                      // Armazena o valor numérico formatado com ponto decimal para o backend
                       field.onChange(numberValue.toFixed(2));
                     }}
                     onBlur={() => {
@@ -370,12 +267,12 @@ export function TransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                   />
                 </FormControl>
                 <div className="text-sm text-muted-foreground mt-1">
-                  {field.value && !isNaN(Number(field.value)) && 
+                  {field.value &&
+                    !isNaN(Number(field.value)) &&
                     new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
-                    }).format(Number(field.value))
-                  }
+                    }).format(Number(field.value))}
                 </div>
                 <FormMessage />
               </FormItem>

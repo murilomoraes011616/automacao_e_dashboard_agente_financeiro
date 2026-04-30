@@ -1,53 +1,28 @@
+/**
+ * TransactionHistory — versão demo, exclui via store local.
+ */
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ArrowDownCircle, ArrowUpCircle, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useState } from "react";
-
-interface Transaction {
-  id: string;
-  type: "entrada" | "saida";
-  date: string;
-  category: string;
-  amount: number;
-  description?: string;
-}
+import { useTransactions, Transaction } from "@/lib/localStore";
 
 interface TransactionHistoryProps {
   transactions: Transaction[];
 }
 
 export function TransactionHistory({ transactions }: TransactionHistoryProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { remove } = useTransactions();
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
-  const handleDelete = async (id: string, type: "entrada" | "saida") => {
-    setDeletingId(id);
-    try {
-      const tableName = type === "entrada" ? "entradas" : "saidas";
-      const { error } = await supabase
-        .from(tableName)
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-      toast.success("Transação excluída com sucesso!");
-    } catch (error) {
-      console.error("Error deleting transaction:", error);
-      toast.error("Erro ao excluir transação");
-    } finally {
-      setDeletingId(null);
-    }
+  const handleDelete = (id: string) => {
+    remove(id);
+    toast.success("Transação excluída com sucesso!");
   };
 
   const sortedTransactions = [...transactions].sort(
@@ -102,8 +77,7 @@ export function TransactionHistory({ transactions }: TransactionHistoryProps) {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleDelete(transaction.id, transaction.type)}
-                      disabled={deletingId === transaction.id}
+                      onClick={() => handleDelete(transaction.id)}
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />

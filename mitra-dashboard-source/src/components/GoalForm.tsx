@@ -1,3 +1,6 @@
+/**
+ * GoalForm — versão demo. Salva metas no localStore.
+ */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,64 +25,36 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useGoals } from "@/lib/localStore";
 
 const formSchema = z.object({
   goal_name: z.string().min(1, "Nome da meta é obrigatório").max(100),
   target_amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Valor deve ser maior que zero",
   }),
-  deadline: z.date({
-    required_error: "Prazo é obrigatório",
-  }),
+  deadline: z.date({ required_error: "Prazo é obrigatório" }),
 });
 
-export function GoalForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { user } = useAuth();
+export function GoalForm() {
+  const { add } = useGoals();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      goal_name: "",
-      target_amount: "",
-      deadline: undefined,
-    },
+    defaultValues: { goal_name: "", target_amount: "", deadline: undefined },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user) return;
-    
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      // Buscar whatsapp_number do perfil
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('whatsapp_number')
-        .eq('id', user.id)
-        .single();
-
-      const userLid = profile?.whatsapp_number ? `${profile.whatsapp_number}@s.whatsapp.net` : null;
-
-      const { error } = await supabase.from("metas").insert({
+      add({
         goal_name: values.goal_name,
         target_amount: Number(values.target_amount),
         deadline: format(values.deadline, "yyyy-MM-dd"),
-        user_id: user.id,
-        whatsapp_number: profile?.whatsapp_number || null,
-        user_lid: userLid,
       });
-
-      if (error) throw error;
-
       toast.success("Meta adicionada com sucesso!");
       form.reset();
-      onSuccess?.();
-    } catch (error) {
-      console.error("Error inserting goal:", error);
-      toast.error("Erro ao adicionar meta");
     } finally {
       setIsSubmitting(false);
     }
@@ -115,12 +90,10 @@ export function GoalForm({ onSuccess }: { onSuccess?: () => void }) {
                     value={field.value}
                     onChange={(e) => {
                       const value = e.target.value.replace(/\D/g, "");
-                      
                       if (value === "") {
                         field.onChange("");
                         return;
                       }
-                      
                       const numberValue = Number(value) / 100;
                       field.onChange(numberValue.toFixed(2));
                     }}
@@ -133,12 +106,12 @@ export function GoalForm({ onSuccess }: { onSuccess?: () => void }) {
                   />
                 </FormControl>
                 <div className="text-sm text-muted-foreground mt-1">
-                  {field.value && !isNaN(Number(field.value)) && 
+                  {field.value &&
+                    !isNaN(Number(field.value)) &&
                     new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
-                    }).format(Number(field.value))
-                  }
+                    }).format(Number(field.value))}
                 </div>
                 <FormMessage />
               </FormItem>
