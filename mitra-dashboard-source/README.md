@@ -24,6 +24,61 @@ O sistema utiliza o número de telefone do WhatsApp como segundo identificador �
 
 ## 📊 Resumo Financeiro e Cadastro de Transações
 
+🔐 Autenticação de Usuário
+
+ ![alt text](image-7.png)
+
+O sistema possui um fluxo completo de autenticação, garantindo acesso seguro aos dados financeiros de cada usuário.
+
+### 📥 Acesso ao sistema
+
+O usuário pode acessar a plataforma utilizando:
+
+- E-mail  
+- Senha  
+
+---
+
+### 🆕 Cadastro (Sign Up)
+
+Caso ainda não possua uma conta, o usuário pode realizar o cadastro informando:
+
+- E-mail  
+- Senha  
+
+Após o registro, o usuário já pode acessar o sistema e começar a utilizar as funcionalidades.
+
+---
+
+### 🔑 Login
+
+Usuários já cadastrados podem realizar login normalmente utilizando suas credenciais.
+
+O sistema autentica o usuário e carrega seus dados financeiros vinculados à conta.
+
+---
+
+### 🔁 Recuperação de senha
+
+O sistema também possui funcionalidade de:
+
+- “Esqueci minha senha”  
+
+Permitindo ao usuário redefinir sua senha de forma segura.
+
+---
+
+### 🔗 Integração com WhatsApp
+
+Após o login, o usuário pode cadastrar seu número de telefone na plataforma.
+
+Esse número é vinculado à sua conta e utilizado para:
+
+- Ativar a integração com a automação via WhatsApp  
+- Permitir interação com o agente de IA  
+- Associar as mensagens aos dados do usuário no sistema  
+
+
 ![alt text](image.png)
 
 
