@@ -32,7 +32,7 @@ O fluxo é capaz de:
 
 ## 🔄 Fluxo Geral da Automação
 
-![](automacao_agente_ia/WhatsApp Image 2026-04-30 at 17.02.33.jpeg)
+![alt text](automacao_agente_ia/WhatsApp Image 2026-04-30 at 17.02.33.jpeg)
 
 A automação segue as seguintes etapas:
 
