@@ -1,0 +1,66 @@
+{
+  "name": "Automacao Agente Financeiro",
+  "__comment": "Workflow principal responsável por receber, processar e responder mensagens do WhatsApp com um agente de IA financeiro",
+  "nodes": [
+    {
+      "name": "Webhook",
+      "__comment": "Ponto de entrada do sistema. Recebe mensagens do WhatsApp via requisição HTTP (webhook).",
+      "type": "n8n-nodes-base.webhook"
+    },
+    {
+      "name": "Get User (Supabase)",
+      "__comment": "Consulta o banco de dados para verificar se o número do usuário está cadastrado.",
+      "type": "n8n-nodes-base.supabase"
+    },
+    {
+      "name": "IF User Exists",
+      "__comment": "Verifica se o usuário foi encontrado no banco. Se não existir, o fluxo é interrompido.",
+      "type": "n8n-nodes-base.if"
+    },
+    {
+      "name": "Edit Fields (Normalize Input)",
+      "__comment": "Extrai e organiza os dados vindos do webhook: número, mensagem e ID.",
+      "type": "n8n-nodes-base.set"
+    },
+    {
+      "name": "Detect Message Type",
+      "__comment": "Identifica o tipo da mensagem (texto, áudio ou imagem).",
+      "type": "n8n-nodes-base.switch"
+    },
+    {
+      "name": "Process Audio",
+      "__comment": "Converte áudio em texto (speech-to-text).",
+      "type": "custom-audio-to-text"
+    },
+    {
+      "name": "Process Image",
+      "__comment": "Analisa imagem com IA e transforma em texto.",
+      "type": "custom-image-to-text"
+    },
+    {
+      "name": "Redis Buffer",
+      "__comment": "Armazena mensagens temporariamente para agrupamento.",
+      "type": "n8n-nodes-base.redis"
+    },
+    {
+      "name": "AI Agent (Mael)",
+      "__comment": "Agente de IA que interpreta mensagens e executa ações no banco.",
+      "type": "n8n-nodes-base.aiAgent"
+    },
+    {
+      "name": "Split Response",
+      "__comment": "Divide respostas longas em partes menores.",
+      "type": "n8n-nodes-base.splitInBatches"
+    },
+    {
+      "name": "Text to Speech",
+      "__comment": "Converte texto em áudio usando ElevenLabs.",
+      "type": "n8n-nodes-base.httpRequest"
+    },
+    {
+      "name": "Send Message",
+      "__comment": "Envia resposta final via WhatsApp.",
+      "type": "n8n-nodes-base.httpRequest"
+    }
+  ]
+}
