@@ -5,7 +5,6 @@
 Automação de atendimento financeiro via WhatsApp desenvolvida com n8n, integrada a banco de dados e um dashboard para visualização de dados em tempo real.
 
 ![alt text](image.png)
-
 ## 🧠 Visão Geral
 
 Este projeto consiste em um agente automatizado capaz de interagir com usuários via WhatsApp para registrar, consultar e organizar informações financeiras.
