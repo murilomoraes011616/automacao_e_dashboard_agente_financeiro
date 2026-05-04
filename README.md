@@ -46,3 +46,30 @@ A automação recebe mensagens, processa os dados, armazena em banco de dados e 
 - Gráficos e análises de receitas e despesas  
 - Acompanhamento de metas financeiras  
 - Interface para consulta e organização dos dados  
+
+### 📚 Documentação do Projeto
+
+Este repositório está organizado em módulos, cada um com documentação detalhada.
+
+Você pode explorar cada parte do sistema através dos READMEs específicos:
+
+- 🤖 **Automação (n8n)**  
+  Contém toda a lógica do agente de IA, processamento de mensagens e integrações  
+  → Acesse a pasta da automação para ver o fluxo completo e explicações técnicas  
+
+- 📊 **Dashboard**  
+  Interface de visualização e análise dos dados financeiros  
+  → Acesse a pasta do dashboard para ver as telas, funcionalidades e estrutura  
+
+---
+
+### 🧾 Detalhamento técnico
+
+Cada módulo possui:
+
+- Explicações detalhadas  
+- Imagens do funcionamento  
+- Estrutura técnica do projeto  
+- **Código comentado**, explicando o que cada parte faz e como o sistema funciona internamente  
+
+Isso facilita o entendimento do projeto tanto em nível visual quanto técnico.
