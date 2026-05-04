@@ -4,6 +4,8 @@
 
 Automação de atendimento financeiro via WhatsApp desenvolvida com n8n, integrada a banco de dados e um dashboard para visualização de dados em tempo real.
 
+Para entender melhor o funcionamento completo do projeto, você pode acessar os READMEs específicos dentro das pastas automacao_agente_ia e mitra-dashboard-source. Neles, estão descritos em detalhes o fluxo da automação, a lógica do agente de IA, a estrutura do dashboard, além de imagens ilustrativas e versões de código comentado explicando o que cada parte faz. Isso permite uma visão tanto técnica quanto visual de todo o sistema.
+
 ![alt text](image.png)
 ## 🧠 Visão Geral
 
