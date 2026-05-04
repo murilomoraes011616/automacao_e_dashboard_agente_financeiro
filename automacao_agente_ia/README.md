@@ -333,3 +333,47 @@ IMPORTANTE:
 
 </prompt>
 
+
+## 📂 Arquivos da Automação
+
+Este diretório contém duas versões do workflow:
+
+### ⚙️ workflow.json
+Versão original do fluxo, utilizada para execução no n8n.
+
+- Contém toda a configuração real da automação  
+- Pronto para importação e uso  
+
+---
+
+### 🧠 workflow_commented.json
+Versão documentada do fluxo, criada para facilitar o entendimento.
+
+- Contém comentários explicando cada etapa da automação  
+- Descreve o papel de cada node  
+- Ideal para análise técnica e aprendizado  
+
+---
+
+💡 Recomenda-se visualizar primeiro o `workflow_commented.json` para entender a lógica do sistema e depois analisar o `workflow.json`.## 📂 Arquivos da Automação
+
+Este diretório contém duas versões do workflow:
+
+### ⚙️ workflow.json
+Versão original do fluxo, utilizada para execução no n8n.
+
+- Contém toda a configuração real da automação  
+- Pronto para importação e uso  
+
+---
+
+### 🧠 workflow_commented.json
+Versão documentada do fluxo, criada para facilitar o entendimento.
+
+- Contém comentários explicando cada etapa da automação  
+- Descreve o papel de cada node  
+- Ideal para análise técnica e aprendizado  
+
+---
+
+💡 Recomenda-se visualizar primeiro o `workflow_commented.json` para entender a lógica do sistema e depois analisar o `codigo_agente_financeiro.json`.
