@@ -67,9 +67,10 @@ Você pode explorar cada parte do sistema através dos READMEs específicos:
 
 Cada módulo possui:
 
-- Explicações detalhadas  
+- Explicações detalhadas  no README de cada projeto
 - Imagens do funcionamento  
 - Estrutura técnica do projeto  
 - **Código comentado**, explicando o que cada parte faz e como o sistema funciona internamente  
 
 Isso facilita o entendimento do projeto tanto em nível visual quanto técnico.
+
