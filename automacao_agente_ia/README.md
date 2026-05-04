@@ -346,7 +346,7 @@ Versão original do fluxo, utilizada para execução no n8n.
 
 ---
 
-### 🧠 workflow_commented.json
+### 🧠 codigo_agente_financeiro_comentado.json
 Versão documentada do fluxo, criada para facilitar o entendimento.
 
 - Contém comentários explicando cada etapa da automação  
@@ -355,7 +355,7 @@ Versão documentada do fluxo, criada para facilitar o entendimento.
 
 ---
 
-💡 Recomenda-se visualizar primeiro o `workflow_commented.json` para entender a lógica do sistema e depois analisar o `workflow.json`.## 📂 Arquivos da Automação
+💡 Recomenda-se visualizar primeiro o `codigo_agente_financeiro_comentado.json` para entender a lógica do sistema e depois analisar o `workflow.json`.## 📂 Arquivos da Automação
 
 Este diretório contém duas versões do workflow:
 
@@ -367,7 +367,7 @@ Versão original do fluxo, utilizada para execução no n8n.
 
 ---
 
-### 🧠 workflow_commented.json
+### 🧠 codigo_agente_financeiro_comentado.json
 Versão documentada do fluxo, criada para facilitar o entendimento.
 
 - Contém comentários explicando cada etapa da automação  
@@ -376,4 +376,4 @@ Versão documentada do fluxo, criada para facilitar o entendimento.
 
 ---
 
-💡 Recomenda-se visualizar primeiro o `workflow_commented.json` para entender a lógica do sistema e depois analisar o `codigo_agente_financeiro.json`.
+💡 Recomenda-se visualizar primeiro o `codigo_agente_financeiro_comentado.json` para entender a lógica do sistema e depois analisar o `codigo_agente_financeiro.json`.
